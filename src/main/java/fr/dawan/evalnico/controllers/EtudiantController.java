@@ -141,4 +141,10 @@ public class EtudiantController {
 		EtudiantDto result = etudiantService.getById(id);
 		return ResponseEntity.status(HttpStatus.OK).body(result);
 	}
+	@GetMapping(value="EprId/{epreuveId}")
+	public ResponseEntity<List<EtudiantDto>> getEtudiantAyantPasseEpreuve(@PathVariable(name="epreuveId")long epreuveId){
+		List<EtudiantDto> result = etudiantService.getEtudiantAyantPasseEpreuve(epreuveId);
+		return ResponseEntity.status(HttpStatus.OK).body(result);
+	}
+	
 }

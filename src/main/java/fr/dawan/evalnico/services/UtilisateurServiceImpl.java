@@ -71,14 +71,14 @@ public class UtilisateurServiceImpl implements UtilisateurService{
 	@Override
 	public List<UtilisateurDto> getAll(int page, int max, String search) {
 		// on requête la bdd
-		System.out.println("search = "+search);
+//		System.out.println("search = "+search);
 		List<Utilisateur> users = utilisateurRepository.findAllByNomContainingOrPrenomContainingOrEmailContaining(search,
 				search, search, PageRequest.of(page, max)).get().collect(Collectors.toList());
 		
 		// on transforme le résultat en liste de DTO
 		List<UtilisateurDto> result = new ArrayList<UtilisateurDto>();
 		for (Utilisateur u : users) {
-			result.add(DtoTools.convert(u, EtudiantDto.class));
+			result.add(DtoTools.convert(u, UtilisateurDto.class));
 		}
 		return result;
 	}

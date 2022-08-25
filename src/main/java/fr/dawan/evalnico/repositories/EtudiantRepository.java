@@ -24,5 +24,9 @@ public interface EtudiantRepository extends JpaRepository<Etudiant, Long>{
 	
 	@Query("FROM Etudiant etu JOIN etu.promotions promo WHERE promo.id = :promotionId")
 	List<Etudiant> findByPromotionId(@Param("promotionId")long promotionId);
-
+	
+	@Query(nativeQuery = true, value = "SELECT etu.id, util.active, util.email, util.image_path, util.mot_de_passe, util.nom, util.prenom, util.role, util.version "
+			+ "FROM etudiant etu JOIN utilisateur util ON util.id=etu.id WHERE etu.id IN"
+			+ " (SELECT evaluation.etudiant_id FROM evaluation WHERE evaluation.epreuve_id=:epreuveId)")
+	List<Etudiant> getEtudiantAyantPasseEpreuve(@Param("epreuveId")long epreuveId);
 }

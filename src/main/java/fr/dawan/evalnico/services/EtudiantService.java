@@ -24,5 +24,7 @@ public interface EtudiantService {
 	List<EtudiantDto> getAll(int page, int max, String search);
 
 	CountDto count(String search);
+	
+	List<EtudiantDto> getEtudiantAyantPasseEpreuve(long epreuveId);
 
 }

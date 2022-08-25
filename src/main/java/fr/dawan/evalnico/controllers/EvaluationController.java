@@ -155,6 +155,11 @@ public class EvaluationController {
 		
 	}
 	
-	
-	
+	@GetMapping(value="/epreuveId={epreuveId}")
+	public ResponseEntity<List<EvaluationDto>> getByEpreuveId(@PathVariable("epreuveId")long epreuveId){
+		List<EvaluationDto> resultInDb=evaluationService.getAllEvalByEpreuveId(epreuveId);
+		
+		return ResponseEntity.status(HttpStatus.OK).body(resultInDb);
+		
+	}
 }

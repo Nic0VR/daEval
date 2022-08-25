@@ -85,6 +85,23 @@ public class BlocCompetencesController {
 		return ResponseEntity.status(HttpStatus.OK).body(result);
 
 	}
+	
+	
+	@GetMapping(value = { "/page/tpId={id}/{page}/{size}", "/page/tpId={id}/{page}/{size}/{search}" }, produces = "application/json")
+	public ResponseEntity<List<BlocCompetencesDto>> getPageTitreProIdAndBySearch(@PathVariable("id") long id,@PathVariable("page") int page,
+			@PathVariable("size") int max, @PathVariable(value = "search", required = false) Optional<String> search) {
+		
+		List<BlocCompetencesDto> result;
+		
+		if (search.isPresent()) {
+			result = blocCompetenceService.findPagedByTitreProIdAndByTitreContainingOrDescriptionContaining(id, search.get(), page-1, max);
+		} else {
+			result = blocCompetenceService.findPagedByTitreProIdAndByTitreContainingOrDescriptionContaining(id, "", page-1, max);
+		}
+		return ResponseEntity.status(HttpStatus.OK).body(result);
+
+	}
+	
 
 	@GetMapping(value = { "/count", "/count/{search}" }, produces = "application/json")
 	public ResponseEntity<CountDto> countBy(@PathVariable(value = "search", required = false) Optional<String> search) {
@@ -96,4 +113,7 @@ public class BlocCompetencesController {
 
 		return ResponseEntity.status(HttpStatus.OK).body(result);
 	}
+	
+	
+	
 }

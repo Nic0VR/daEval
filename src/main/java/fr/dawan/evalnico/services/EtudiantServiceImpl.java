@@ -181,4 +181,17 @@ public class EtudiantServiceImpl implements EtudiantService{
 		return d;
 	}
 
+
+	@Override
+	public List<EtudiantDto> getEtudiantAyantPasseEpreuve(long epreuveId) {
+		List<Etudiant> users = etudiantRepository.getEtudiantAyantPasseEpreuve(epreuveId);
+
+		// on transforme le résultat en liste de DTO
+		List<EtudiantDto> result = new ArrayList<EtudiantDto>();
+		for (Etudiant u : users) {
+			result.add(DtoTools.convert(u, EtudiantDto.class));
+		}
+		return result;
+	}
+
 }
