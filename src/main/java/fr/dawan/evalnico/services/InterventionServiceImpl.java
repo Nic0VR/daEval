@@ -3,10 +3,13 @@ package fr.dawan.evalnico.services;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
+import fr.dawan.evalnico.dto.CountDto;
 import fr.dawan.evalnico.dto.InterventionDto;
 import fr.dawan.evalnico.dto.PositionnementDto;
 import fr.dawan.evalnico.entities.Intervention;
@@ -34,7 +37,7 @@ public class InterventionServiceImpl implements InterventionService {
 	public InterventionDto getById(long id) {
 		Optional<Intervention> resultInDb = interventionRepository.findById(id);
 		if (resultInDb.isPresent()) {
-			return DtoTools.convert(resultInDb, InterventionDto.class);
+			return DtoTools.convert(resultInDb.get(), InterventionDto.class);
 		}
 		return null;
 	}
@@ -75,6 +78,29 @@ public class InterventionServiceImpl implements InterventionService {
 	@Override
 	public void delete(long id) {
 		interventionRepository.deleteById(id);
+	}
+	
+	
+	@Override
+	public List<InterventionDto> getAll(int page, int max, String search) throws Exception {
+		// on requête la bdd
+		List<Intervention> intervs = interventionRepository.findAll(PageRequest.of(page, max)).get()
+				.collect(Collectors.toList());
+
+		// on transforme le résultat en liste de DTO
+		List<InterventionDto> result = new ArrayList<InterventionDto>();
+		for (Intervention interv : intervs) {
+			result.add(DtoTools.convert(interv, InterventionDto.class));
+		}
+		return result;
+	}
+
+	@Override
+	public CountDto count() {
+		long result = interventionRepository.count();
+		CountDto d = new CountDto();
+		d.setNb(result);
+		return d;
 	}
 
 }

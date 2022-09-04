@@ -15,8 +15,11 @@ import org.springframework.ui.freemarker.FreeMarkerTemplateUtils;
 
 import fr.dawan.evalnico.dto.CountDto;
 import fr.dawan.evalnico.dto.EtudiantDto;
+import fr.dawan.evalnico.dto.FormationDto;
 import fr.dawan.evalnico.dto.InterventionDto;
+import fr.dawan.evalnico.dto.ModelGrilleEtudiant;
 import fr.dawan.evalnico.dto.PositionnementDto;
+import fr.dawan.evalnico.dto.UtilisateurDto;
 import fr.dawan.evalnico.entities.Intervention;
 import fr.dawan.evalnico.entities.Positionnement;
 import fr.dawan.evalnico.entities.Promotion;
@@ -46,7 +49,11 @@ public class PositionnementServiceImpl implements PositionnementService {
 	private PromotionService promotionService;
 	@Autowired
 	private PromotionRepository promotionRepository;
-
+	@Autowired
+	private FormationService formationService;
+	@Autowired
+	private UtilisateurService utilisateurService;
+	
 	@Override
 	public List<PositionnementDto> getAll() {
 		List<Positionnement> resultInDb = positionnementRepository.findAll();
@@ -57,11 +64,6 @@ public class PositionnementServiceImpl implements PositionnementService {
 		return result;
 	}
 
-	@Override
-	public List<PositionnementDto> getAll(int start, int max) {
-		// TODO Auto-generated method stub
-		return null;
-	}
 
 	@Override
 	public PositionnementDto getById(long id) {
@@ -86,7 +88,7 @@ public class PositionnementServiceImpl implements PositionnementService {
 	}
 
 	@Override
-	public CountDto count(String search) {
+	public CountDto count() {
 		CountDto result = new CountDto();
 		result.setNb(positionnementRepository.count());
 		return result;
@@ -143,16 +145,41 @@ public class PositionnementServiceImpl implements PositionnementService {
 		Map<String, Object> model = new HashMap<String, Object>();
 		EtudiantDto etudiant = etudiantService.getById(etudiantId);
 		model.put("etudiant", etudiant);
-		Map<InterventionDto, PositionnementDto> positionnements = new HashMap<InterventionDto, PositionnementDto>();
-		List<InterventionDto> interventions = interventionService.getAllByEtudiantId(etudiantId);
-
-		for (InterventionDto interventionDto : interventions) {
-			PositionnementDto positionnementsOfIntervention = this.getByEtudiantIdAndInterventionId(etudiantId,
-					interventionDto.getId());
-			positionnements.put(interventionDto, positionnementsOfIntervention);
+//		Map<InterventionDto, PositionnementDto> positionnements = new HashMap<InterventionDto, PositionnementDto>();
+//		List<InterventionDto> interventions = interventionService.getAllByEtudiantId(etudiantId);
+////
+//		for (InterventionDto interventionDto : interventions) {
+//			PositionnementDto positionnementsOfIntervention = this.getByEtudiantIdAndInterventionId(etudiantId,
+//					interventionDto.getId());
+//			positionnements.put(interventionDto, positionnementsOfIntervention);
+//		}
+//		
+		// Récupération des positionnements de l'etudiant
+		List<PositionnementDto> positionnementsOfStudent = this.getAllByEtudiantId(etudiantId);
+		List<ModelGrilleEtudiant> data = new ArrayList<ModelGrilleEtudiant>();
+		
+		for (PositionnementDto positionnementDto : positionnementsOfStudent) {
+			// récupération de l'intervention concernant le positionnement
+			InterventionDto inter = interventionService.getById( positionnementDto.getInterventionId());
+			FormationDto formation = formationService.getById(inter.getFormationId());
+			UtilisateurDto formateur = utilisateurService.getById(inter.getFormateurId());
+			String nomFormateur = formateur.getNom() + " " + formateur.getPrenom();
+			
+			ModelGrilleEtudiant mge = new ModelGrilleEtudiant();
+			mge.setFormation(formation);
+			mge.setIntervention(inter);
+			mge.setPositionnement(positionnementDto);
+			mge.setNomCompletFormateur(nomFormateur);
+			
+			data.add(mge);
 		}
-		model.put("positionnements", positionnements);
+		
+		model.put("data", data);
+		
+		
+//		model.put("positionnements", positionnements);
 
+		
 		// on définit ici le chemin où il va chercher les fichiers de templates
 		freemarkerConfig.setClassForTemplateLoading(this.getClass(), "/templates");
 		// charger le template titrepro.ftl
@@ -217,7 +244,7 @@ public class PositionnementServiceImpl implements PositionnementService {
 	}
 
 	@Override
-	public List<PositionnementDto> getAll(int page, int max, String search) throws Exception {
+	public List<PositionnementDto> getAll(int page, int max) throws Exception {
 		// on requête la bdd
 		List<Positionnement> titres = positionnementRepository.findAll(PageRequest.of(page, max)).get()
 				.collect(Collectors.toList());
@@ -229,5 +256,8 @@ public class PositionnementServiceImpl implements PositionnementService {
 		}
 		return result;
 	}
+
+
+
 
 }

@@ -13,7 +13,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import fr.dawan.evalnico.dto.CountDto;
-import fr.dawan.evalnico.dto.EtudiantDto;
+import fr.dawan.evalnico.dto.FormateurDto;
 import fr.dawan.evalnico.dto.LoginDto;
 import fr.dawan.evalnico.dto.LoginResponseDto;
 import fr.dawan.evalnico.dto.UtilisateurDto;
@@ -137,5 +137,20 @@ public class UtilisateurServiceImpl implements UtilisateurService{
 			return result;
 		} else
 			throw new Exception("Error : invalid credentials !");
+	}
+
+	@Override
+	public List<FormateurDto> getAllFormateurs() {
+		
+		List<Utilisateur> resultInDb = utilisateurRepository.getAllFormateurs();
+		List<FormateurDto> result = new ArrayList<FormateurDto>();
+		for (Utilisateur utilisateur : resultInDb) {
+			FormateurDto f = new FormateurDto();
+			f.setId(utilisateur.getId());
+			f.setNom(utilisateur.getNom());
+			f.setPrenom(utilisateur.getPrenom());
+			result.add(f);
+		}
+		return result;
 	}
 }

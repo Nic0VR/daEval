@@ -8,13 +8,12 @@ import fr.dawan.evalnico.dto.PositionnementDto;
 public interface PositionnementService {
 	List<PositionnementDto> getAll();
 
-	List<PositionnementDto> getAll(int start, int max);
+	List<PositionnementDto> getAll(int start, int max) throws Exception;
 
 	PositionnementDto getById(long id);
 
 	PositionnementDto saveOrUpdate(PositionnementDto pDto) throws Exception;
 
-	CountDto count(String search);
 
 	void delete(long id);
 
@@ -28,10 +27,11 @@ public interface PositionnementService {
 
 	String generatePdfGrillePositionnementPromotion(long promotionId) throws Exception;
 
-	List<PositionnementDto> getAll(int page, int max, String search) throws Exception;
 
 	List<PositionnementDto> getAllByEtudiantAndPromo(long etudiantId, long promotionId) throws Exception;
 
 
 	void deleteByEtudiantId(long id);
+
+	CountDto count();
 }

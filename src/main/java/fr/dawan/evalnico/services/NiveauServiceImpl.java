@@ -5,14 +5,14 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
-import fr.dawan.evalnico.dto.BlocCompetencesDto;
 import fr.dawan.evalnico.dto.NiveauDto;
-import fr.dawan.evalnico.entities.BlocCompetences;
 import fr.dawan.evalnico.entities.Niveau;
 import fr.dawan.evalnico.repositories.NiveauRepository;
 import fr.dawan.evalnico.tools.DtoTools;
 
+@Service
 public class NiveauServiceImpl implements NiveauService {
 	
 	@Autowired

@@ -27,17 +27,20 @@
 					<th colspan="1"> Date d'intervention </th>
 					<th colspan="1"> Intervenant</th>
 					<th colspan="1"> Objectifs pédagogiques</th>
-					<th>${etudiant.prenom}</th>
+					<th>Niveau Début</th>
+					<th>Niveau Fin</th>
 				</tr>
 			</thead>
 			<tbody>
-			<#list positionnements?keys as key>
+
+			<#list data as mge>
 				<tr>
-					<td> ${key.formation.titre}</td>
-					<td> ${key.dateDebut}</td>
-					<td> ${key.formateur}</td>
-					<td> ${key.formation.objectifsPedagogiques}</td>
-					<td>${positionnements[key].niveauDebut.valeur}</td>
+				<td>${mge.formation.titre}</td>
+				<td>${mge.intervention.dateDebut}</td>
+				<td>${mge.nomCompletFormateur}</td>
+				<td>${mge.formation.objectifsPedagogiques}</td>
+				<td>${mge.positionnement.niveauDebutId}</td>
+				<td>${mge.positionnement.niveauFinId}</td>
 				</tr>
 			</#list>
 			</tbody>

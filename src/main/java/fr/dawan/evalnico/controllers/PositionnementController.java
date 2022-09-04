@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import fr.dawan.evalnico.dto.CountDto;
 import fr.dawan.evalnico.dto.PositionnementDto;
 import fr.dawan.evalnico.services.PositionnementService;
 
@@ -99,8 +100,31 @@ public class PositionnementController {
 	public List<PositionnementDto> getAllByPage(@PathVariable("page") int page, @PathVariable("size") int max,
 			@PathVariable(value = "search", required = false) Optional<String> search) throws Exception {
 		if (search.isPresent())
-			return positionnementService.getAll(page - 1, max, search.get());
+			return positionnementService.getAll(page - 1, max);
 		else
-			return positionnementService.getAll(page - 1, max, "");
+			return positionnementService.getAll(page - 1, max);
+	}
+	
+	
+	// GET /count/{search}
+	@GetMapping(value= {"/count","/count/{search}"}, produces = "application/json")
+	public CountDto countBy(@PathVariable(value = "search",required = false) Optional<String> search) {
+		CountDto result = null;
+		if(search.isPresent())
+			result = positionnementService.count();
+		else
+			result = positionnementService.count();
+
+		return result;
+	}
+	
+	@GetMapping(value="/ByInterv={id}",produces="application/json")
+	public List<PositionnementDto> getAllByInterventionId(@PathVariable("id") long id){
+		
+		
+		List<PositionnementDto> result = positionnementService.getAllByInterventionId(id);
+		
+		return result;
+		
 	}
 }
