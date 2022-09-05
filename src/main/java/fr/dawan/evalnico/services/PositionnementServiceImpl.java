@@ -186,11 +186,11 @@ public class PositionnementServiceImpl implements PositionnementService {
 		Template template = freemarkerConfig.getTemplate("grillepositionnement.ftl");
 
 		// on lui demande d'appliquer le template pour l'objet model
-		String result = FreeMarkerTemplateUtils.processTemplateIntoString(template, model);
+		String htmlContent = FreeMarkerTemplateUtils.processTemplateIntoString(template, model);
 
-//		String outputPdf = storageFolder + "/grilleposition-" + etudiant.getNom()+etudiant.getPrenom() + ".pdf";
-//		PdfTools.generatePdfFromHtml(outputPdf, result);
-		return result;
+		String outputPdf = storageFolder + "/grilleposition-" + etudiant.getNom()+etudiant.getPrenom() + ".pdf";
+		PdfTools.generatePdfFromHtml(outputPdf, htmlContent);
+		return outputPdf;
 	}
 
 	@Override
@@ -238,7 +238,7 @@ public class PositionnementServiceImpl implements PositionnementService {
 			String outputPdf = storageFolder + "/grille-promo-" + promo.getId() + ".pdf";
 			PdfTools.generatePdfFromHtml(outputPdf, htmlContent);
 
-			return htmlContent;
+			return outputPdf;
 		}
 		return null;
 	}

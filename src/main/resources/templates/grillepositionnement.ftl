@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-
+<html>
 <head>
 	<style>
 		.red{
@@ -13,7 +13,7 @@
 			border:solid black 1px
 		}
 	</style>
-	<meta charset="UTF-8" />
+
 	</head>
 
 	<body>
@@ -44,7 +44,7 @@
 				</tr>
 			</#list>
 			</tbody>
-		<table>
+		</table>
 		</section>
 	</body>
 </html>

@@ -106,7 +106,7 @@ public class EvaluationServiceImpl implements EvaluationService {
 	public CountDto moyenneEtudiantInBlocComp(long etudiantId, long blocCompId) {
 		CountDto result = new CountDto();
 		try {
-			double res = evaluationRepository.getAvgByEtudiantIdAndBlocCompId(etudiantId, blocCompId)
+			double res = evaluationRepository.getAvgByEtudiantIdAndBlocCompId(etudiantId, blocCompId);
 			result.setNb(res);
 		} catch (Exception e) {
 			// TODO: handle exception
