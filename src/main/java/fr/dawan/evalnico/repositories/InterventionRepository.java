@@ -16,5 +16,7 @@ public interface InterventionRepository extends JpaRepository<Intervention,Long>
 	List<Intervention> getAllByPromotionId(@Param("promotionId")long promotionId);
 	@Query("FROM Intervention i JOIN i.promotion p JOIN FETCH p.etudiants etu WHERE etu.id = :etudiantId ")
 	List<Intervention> getAllByEtudiantId(@Param("etudiantId")long etudiantId);
+	@Query("FROM Intervention i WHERE i.formateur.id =:id")
+	List<Intervention> findAllByFormateurId(@Param("id")long id);
 
 }

@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 import fr.dawan.evalnico.dto.CountDto;
 import fr.dawan.evalnico.dto.FormationDto;
 import fr.dawan.evalnico.dto.InterventionDto;
+import fr.dawan.evalnico.dto.PositionnementDto;
 import fr.dawan.evalnico.services.InterventionService;
 
 @RestController
@@ -72,5 +73,22 @@ public class InterventionController {
 		return result;
 	}
 	
+	@GetMapping(value="/{id}",produces="application/json")
+	public ResponseEntity<InterventionDto> getById(@PathVariable(value="id")long id){
+		
+		InterventionDto resultInDb = interventionService.getById(id);
+		
+		return ResponseEntity.status(HttpStatus.OK).body(resultInDb);
+		
+	}
+	
+	@GetMapping(value="/ByFormateur={id}",produces="application/json")
+	public  ResponseEntity<List<InterventionDto>> getAllByFormateurId(@PathVariable("id") long id){
+		
+		List<InterventionDto> result = interventionService.getAllByFormateurId(id);
+		
+		return ResponseEntity.status(HttpStatus.OK).body(result);
+		
+	}
 	
 }

@@ -15,6 +15,7 @@ public interface InterventionService {
 	InterventionDto saveOrUpdate(InterventionDto idto);
 	List<InterventionDto> getAll(int page, int max, String search) throws Exception;
 	CountDto count();
+	List<InterventionDto> getAllByFormateurId(long id);
 	
 }
 	

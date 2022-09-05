@@ -5,7 +5,16 @@ public class NiveauDto {
 	private int version;
 	private String description;
 	private String codeCouleurHexa;
+	private int valeur;
 	
+	
+	
+	public int getValeur() {
+		return valeur;
+	}
+	public void setValeur(int valeur) {
+		this.valeur = valeur;
+	}
 	public long getId() {
 		return id;
 	}

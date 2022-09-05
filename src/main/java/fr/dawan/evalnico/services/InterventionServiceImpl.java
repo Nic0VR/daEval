@@ -103,4 +103,15 @@ public class InterventionServiceImpl implements InterventionService {
 		return d;
 	}
 
+	@Override
+	public List<InterventionDto> getAllByFormateurId(long id) {
+		List<Intervention> resultInDb = interventionRepository.findAllByFormateurId(id);
+		
+		List<InterventionDto> result = new ArrayList<InterventionDto>();
+		for (Intervention interv : resultInDb) {
+			result.add(DtoTools.convert(interv, InterventionDto.class));
+		}
+		return result;
+	}
+
 }

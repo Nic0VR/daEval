@@ -96,13 +96,11 @@ public class PositionnementController {
 		return ResponseEntity.status(HttpStatus.OK).body(result);
 	}
 	
-	@GetMapping(value = { "/{page}/{size}", "/{page}/{size}/{search}" }, produces = "application/json")
-	public List<PositionnementDto> getAllByPage(@PathVariable("page") int page, @PathVariable("size") int max,
-			@PathVariable(value = "search", required = false) Optional<String> search) throws Exception {
-		if (search.isPresent())
-			return positionnementService.getAll(page - 1, max);
-		else
-			return positionnementService.getAll(page - 1, max);
+	@GetMapping(value = { "/page/{page}/{size}" }, produces = "application/json")
+	public List<PositionnementDto> getAllByPage(@PathVariable("page") int page, @PathVariable("size") int max) throws Exception {
+		
+		return positionnementService.getAll(page - 1, max);
+
 	}
 	
 	
@@ -121,10 +119,20 @@ public class PositionnementController {
 	@GetMapping(value="/ByInterv={id}",produces="application/json")
 	public List<PositionnementDto> getAllByInterventionId(@PathVariable("id") long id){
 		
-		
 		List<PositionnementDto> result = positionnementService.getAllByInterventionId(id);
 		
 		return result;
 		
 	}
+	
+	@GetMapping(value="/ByEtudiant={id}",produces="application/json")
+	public List<PositionnementDto> getAllByEtudiantId(@PathVariable("id") long id){
+		
+		List<PositionnementDto> result = positionnementService.getAllByEtudiantId(id);
+		
+		return result;
+		
+	}
+	
+
 }

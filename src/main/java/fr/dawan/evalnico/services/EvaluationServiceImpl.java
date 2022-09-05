@@ -106,7 +106,8 @@ public class EvaluationServiceImpl implements EvaluationService {
 	public CountDto moyenneEtudiantInBlocComp(long etudiantId, long blocCompId) {
 		CountDto result = new CountDto();
 		try {
-			result.setNb(evaluationRepository.getAvgByEtudiantIdAndBlocCompId(etudiantId, blocCompId));
+			double res = evaluationRepository.getAvgByEtudiantIdAndBlocCompId(etudiantId, blocCompId)
+			result.setNb(res);
 		} catch (Exception e) {
 			// TODO: handle exception
 		}
@@ -228,7 +229,7 @@ public class EvaluationServiceImpl implements EvaluationService {
 	
 
 
-	@Override
+	@Override  
 	public String generateBulletinPdfByStudentAndPromo(long etudiantId, long promotionId) throws Exception {
 		Optional<Etudiant> etuOpt = etudiantRepository.findById(etudiantId);
 		if (etuOpt.isPresent()) {
