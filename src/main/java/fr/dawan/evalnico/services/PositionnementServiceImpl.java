@@ -23,6 +23,7 @@ import fr.dawan.evalnico.dto.UtilisateurDto;
 import fr.dawan.evalnico.entities.Intervention;
 import fr.dawan.evalnico.entities.Positionnement;
 import fr.dawan.evalnico.entities.Promotion;
+import fr.dawan.evalnico.exceptions.IllegalCreateException;
 import fr.dawan.evalnico.repositories.PositionnementRepository;
 import fr.dawan.evalnico.repositories.PromotionRepository;
 import fr.dawan.evalnico.tools.DtoTools;
@@ -75,13 +76,13 @@ public class PositionnementServiceImpl implements PositionnementService {
 	}
 
 	@Override
-	public PositionnementDto saveOrUpdate(PositionnementDto uDto) throws Exception {
+	public PositionnementDto saveOrUpdate(PositionnementDto uDto) throws IllegalCreateException {
 		Positionnement u = DtoTools.convert(uDto, Positionnement.class);
 		if (u.getId() == 0) { // insertion = on vérifie qu'il n'est pas déjà noté
 			Positionnement p = positionnementRepository.findByEtudiantIdAndInterventionId(uDto.getEtudiantId(),
 					uDto.getInterventionId());
 			if (p != null)
-				throw new Exception("An other evaluation exist for this student/intervention, update the first one !");
+				throw new IllegalCreateException("An other positionnement exist for this student/intervention, update the first one !");
 		}
 		u = positionnementRepository.saveAndFlush(u);
 		return DtoTools.convert(u, PositionnementDto.class);

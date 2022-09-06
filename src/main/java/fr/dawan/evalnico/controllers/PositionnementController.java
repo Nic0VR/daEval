@@ -26,6 +26,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import fr.dawan.evalnico.dto.CountDto;
 import fr.dawan.evalnico.dto.PositionnementDto;
+import fr.dawan.evalnico.exceptions.IllegalCreateException;
 import fr.dawan.evalnico.services.PositionnementService;
 
 @RestController
@@ -42,7 +43,8 @@ public class PositionnementController {
 	}
 
 	@GetMapping(value = "/{etudiantId}/grille", produces = "application/octet-stream")
-	public ResponseEntity<Resource> generatePdfGrillePosEtudiant(@PathVariable("etudiantId") long etudiantId) throws Exception {
+	public ResponseEntity<Resource> generatePdfGrillePosEtudiant(@PathVariable("etudiantId") long etudiantId)
+			throws Exception {
 
 		String outputPdfPath = positionnementService.generatePdfGrillePositionnementEtudiant(etudiantId);
 
@@ -50,58 +52,51 @@ public class PositionnementController {
 		Path path = Paths.get(f.getAbsolutePath());
 		ByteArrayResource resource = new ByteArrayResource(Files.readAllBytes(path));
 		HttpHeaders headers = new HttpHeaders();
-		headers.add(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=grillePosEtudiant"+etudiantId+".pdf");
+		headers.add(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=grillePosEtudiant" + etudiantId + ".pdf");
 		headers.add("Cache-Control", "no-cache, no-store, must-revalidate");
 		headers.add("Pragma", "no-cache");
 		headers.add("Expires", "0");
-		
+
 		return ResponseEntity.ok().headers(headers).contentLength(f.length())
 				.contentType(MediaType.APPLICATION_OCTET_STREAM).body(resource);
 
 	}
 
 	@GetMapping(value = "/promo/{promotionId}/grille", produces = "application/octet-stream")
-	public ResponseEntity<Resource> generatePdfGrillePosPromo(@PathVariable("promotionId") long promotionId) throws Exception {
+	public ResponseEntity<Resource> generatePdfGrillePosPromo(@PathVariable("promotionId") long promotionId)
+			throws Exception {
 
-		String outputPdfPath  = positionnementService.generatePdfGrillePositionnementPromotion(promotionId);
-		
+		String outputPdfPath = positionnementService.generatePdfGrillePositionnementPromotion(promotionId);
+
 		File f = new File(outputPdfPath);
 		Path path = Paths.get(f.getAbsolutePath());
 		ByteArrayResource resource = new ByteArrayResource(Files.readAllBytes(path));
 		HttpHeaders headers = new HttpHeaders();
-		headers.add(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=grillePosPromotion"+promotionId+".pdf");
+		headers.add(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=grillePosPromotion" + promotionId + ".pdf");
 		headers.add("Cache-Control", "no-cache, no-store, must-revalidate");
 		headers.add("Pragma", "no-cache");
 		headers.add("Expires", "0");
-		
+
 		return ResponseEntity.ok().headers(headers).contentLength(f.length())
 				.contentType(MediaType.APPLICATION_OCTET_STREAM).body(resource);
-
-		
 
 	}
 
 	@PostMapping(consumes = "application/json", produces = "application/json")
-	public ResponseEntity<PositionnementDto> save(@RequestBody PositionnementDto p) {
+	public ResponseEntity<PositionnementDto> save(@RequestBody PositionnementDto p) throws IllegalCreateException {
 		PositionnementDto result = null;
-		try {
-			result = positionnementService.saveOrUpdate(p);
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+
+		result = positionnementService.saveOrUpdate(p);
+
 		return ResponseEntity.status(HttpStatus.CREATED).body(result);
 	}
 
 	@PutMapping(consumes = "application/json", produces = "application/json")
-	public ResponseEntity<PositionnementDto> update(@RequestBody PositionnementDto p) {
+	public ResponseEntity<PositionnementDto> update(@RequestBody PositionnementDto p) throws IllegalCreateException {
 		PositionnementDto result = null;
-		try {
-			result = positionnementService.saveOrUpdate(p);
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+	
+		result = positionnementService.saveOrUpdate(p);
+
 		return ResponseEntity.status(HttpStatus.CREATED).body(result);
 	}
 

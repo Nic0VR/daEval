@@ -25,6 +25,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import fr.dawan.evalnico.dto.CountDto;
 import fr.dawan.evalnico.dto.TitreProfessionnelDto;
+import fr.dawan.evalnico.exceptions.NoDataException;
 import fr.dawan.evalnico.services.TitreProfessionnelService;
 
 
@@ -63,7 +64,7 @@ public class TitreProfesionnelController {
 	}
 	
 	@DeleteMapping(value= "/{id}") 
-	public ResponseEntity<Long> Delete(@PathVariable(name="id",required=true) long id){
+	public ResponseEntity<Long> Delete(@PathVariable(name="id",required=true) long id) throws Exception{
 		titreProfessionnelService.delete(id);
 		return ResponseEntity.status(HttpStatus.OK).body(id);
 	}

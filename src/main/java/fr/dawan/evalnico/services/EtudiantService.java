@@ -6,6 +6,7 @@ import fr.dawan.evalnico.dto.CountDto;
 import fr.dawan.evalnico.dto.EtudiantDto;
 import fr.dawan.evalnico.dto.LoginDto;
 import fr.dawan.evalnico.dto.LoginResponseDto;
+import fr.dawan.evalnico.exceptions.NoDataException;
 
 public interface EtudiantService {
 	
@@ -13,11 +14,11 @@ public interface EtudiantService {
 	
 	List<EtudiantDto> getAll();
 	
-	void delete(long id);
+	void delete(long id) throws NoDataException;
 	
 	EtudiantDto findByEmail(String email) throws Exception;
 
-	EtudiantDto getById(long id);
+	EtudiantDto getById(long id) throws NoDataException;
 	
 //	LoginResponseDto checkLogin(LoginDto loginDto) throws Exception;
 
@@ -26,5 +27,7 @@ public interface EtudiantService {
 	CountDto count(String search);
 	
 	List<EtudiantDto> getEtudiantAyantPasseEpreuve(long epreuveId);
+
+	List<EtudiantDto> getEtudiantByInterventionId(long intervId);
 
 }

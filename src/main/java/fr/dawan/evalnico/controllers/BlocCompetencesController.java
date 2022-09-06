@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import fr.dawan.evalnico.dto.BlocCompetencesDto;
 import fr.dawan.evalnico.dto.CountDto;
+import fr.dawan.evalnico.exceptions.NoDataException;
 import fr.dawan.evalnico.services.BlocCompetenceService;
 
 @RestController
@@ -55,14 +56,14 @@ public class BlocCompetencesController {
 	}
 
 	@GetMapping(value = "/{id}", produces = "application/json")
-	public ResponseEntity<BlocCompetencesDto> findById(@PathVariable(name = "id", required = true) long id) {
+	public ResponseEntity<BlocCompetencesDto> findById(@PathVariable(name = "id", required = true) long id) throws NoDataException {
 		BlocCompetencesDto result = blocCompetenceService.findById(id);
 		return ResponseEntity.status(HttpStatus.OK).body(result);
 	}
 
 	@GetMapping(value = "/tpId={id}", produces = "application/json")
 	public ResponseEntity<List<BlocCompetencesDto>> findByTitreProId(
-			@PathVariable(name = "id", required = true) long id) {
+			@PathVariable(name = "id", required = true) long id) throws NoDataException {
 		List<BlocCompetencesDto> result = blocCompetenceService.findAllByTitreProId(id);
 		return ResponseEntity.status(HttpStatus.OK).body(result);
 	}
@@ -89,7 +90,7 @@ public class BlocCompetencesController {
 	
 	@GetMapping(value = { "/page/tpId={id}/{page}/{size}", "/page/tpId={id}/{page}/{size}/{search}" }, produces = "application/json")
 	public ResponseEntity<List<BlocCompetencesDto>> getPageTitreProIdAndBySearch(@PathVariable("id") long id,@PathVariable("page") int page,
-			@PathVariable("size") int max, @PathVariable(value = "search", required = false) Optional<String> search) {
+			@PathVariable("size") int max, @PathVariable(value = "search", required = false) Optional<String> search) throws NoDataException {
 		
 		List<BlocCompetencesDto> result;
 		

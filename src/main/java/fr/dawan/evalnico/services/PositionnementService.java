@@ -4,6 +4,7 @@ import java.util.List;
 
 import fr.dawan.evalnico.dto.CountDto;
 import fr.dawan.evalnico.dto.PositionnementDto;
+import fr.dawan.evalnico.exceptions.IllegalCreateException;
 
 public interface PositionnementService {
 	List<PositionnementDto> getAll();
@@ -12,8 +13,7 @@ public interface PositionnementService {
 
 	PositionnementDto getById(long id);
 
-	PositionnementDto saveOrUpdate(PositionnementDto pDto) throws Exception;
-
+	PositionnementDto saveOrUpdate(PositionnementDto pDto) throws IllegalCreateException;
 
 	void delete(long id);
 

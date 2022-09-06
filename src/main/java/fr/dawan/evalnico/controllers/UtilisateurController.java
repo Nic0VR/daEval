@@ -18,6 +18,8 @@ import org.springframework.web.bind.annotation.RestController;
 import fr.dawan.evalnico.dto.CountDto;
 import fr.dawan.evalnico.dto.FormateurDto;
 import fr.dawan.evalnico.dto.UtilisateurDto;
+import fr.dawan.evalnico.exceptions.InvalidDataException;
+import fr.dawan.evalnico.exceptions.NoDataException;
 import fr.dawan.evalnico.services.UtilisateurService;
 
 @RestController
@@ -61,48 +63,37 @@ public class UtilisateurController {
 //	}
 
 	@PostMapping(consumes = "application/json", produces = "application/json")
-	public ResponseEntity<UtilisateurDto> save(@RequestBody UtilisateurDto uDto) {
+	public ResponseEntity<UtilisateurDto> save(@RequestBody UtilisateurDto uDto) throws Exception {
 		UtilisateurDto result = null;
-		try {
-			result = utilisateurService.saveOrUpdate(uDto);
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		
+		result = utilisateurService.saveOrUpdate(uDto);
+		
 		return ResponseEntity.status(HttpStatus.CREATED).body(result);
 	}
 
 	@PutMapping(consumes = "application/json", produces = "application/json")
-	public ResponseEntity<UtilisateurDto> update(@RequestBody UtilisateurDto uDto) {
+	public ResponseEntity<UtilisateurDto> update(@RequestBody UtilisateurDto uDto) throws Exception {
 		UtilisateurDto r = utilisateurService.getById(uDto.getId());
-		if (r == null) {
-			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(uDto);
-		}
-		try {
-			return ResponseEntity.status(HttpStatus.OK).body(utilisateurService.saveOrUpdate(uDto));
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(uDto);
+
+		return ResponseEntity.status(HttpStatus.OK).body(utilisateurService.saveOrUpdate(uDto));
 
 	}
 
 	// suppression
 	@DeleteMapping(value = "/{id}", produces = "application/json") // dans PathVariable, tout param est obligatoire,
-	public ResponseEntity<Long> delete(@PathVariable(name = "id") long id) {
+	public ResponseEntity<Long> delete(@PathVariable(name = "id") long id)throws NoDataException, IllegalArgumentException {
 		utilisateurService.delete(id);
 		return ResponseEntity.status(HttpStatus.OK).body(id);
 	}
 
 	@GetMapping(value = "/{id}", produces = "application/json")
-	public ResponseEntity<UtilisateurDto> getById(@PathVariable(name = "id", required = true) long id) {
+	public ResponseEntity<UtilisateurDto> getById(@PathVariable(name = "id", required = true) long id) throws NoDataException, IllegalArgumentException {
 		UtilisateurDto result = utilisateurService.getById(id);
 		return ResponseEntity.status(HttpStatus.OK).body(result);
 	}
 
 	@GetMapping(value = "/formateurs", produces = "application/json")
-	public ResponseEntity<List<FormateurDto>> getAllFormateurs() {
+	public ResponseEntity<List<FormateurDto>> getAllFormateurs() throws NoDataException {
 		List<FormateurDto> result = utilisateurService.getAllFormateurs();
 		return ResponseEntity.status(HttpStatus.OK).body(result);
 

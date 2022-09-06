@@ -18,6 +18,8 @@ import fr.dawan.evalnico.dto.LoginResponseDto;
 import fr.dawan.evalnico.dto.UtilisateurDto;
 import fr.dawan.evalnico.entities.Etudiant;
 import fr.dawan.evalnico.entities.Promotion;
+import fr.dawan.evalnico.exceptions.InvalidDataException;
+import fr.dawan.evalnico.exceptions.NoDataException;
 import fr.dawan.evalnico.repositories.EtudiantRepository;
 import fr.dawan.evalnico.repositories.EvaluationRepository;
 import fr.dawan.evalnico.repositories.PromotionRepository;
@@ -26,7 +28,7 @@ import fr.dawan.evalnico.tools.HashTools;
 
 @Service
 @Transactional
-public class EtudiantServiceImpl implements EtudiantService{
+public class EtudiantServiceImpl implements EtudiantService {
 	@Autowired
 	private EtudiantRepository etudiantRepository;
 	@Autowired
@@ -35,91 +37,61 @@ public class EtudiantServiceImpl implements EtudiantService{
 	private PromotionRepository promotionRepository;
 	@Autowired
 	private EvaluationRepository evaluationRepository;
-	@Autowired 
+	@Autowired
 	private EvaluationService evaluationService;
 	@Autowired
 	private UtilisateurService utilisateurService;
 	@Autowired
 	private PositionnementService positionnementService;
-//	@Override
-//	public EtudiantDto saveOrUpdate(EtudiantDto eDto) {
-//		
-//		Etudiant e = DtoTools.convert(eDto, Etudiant.class);
-//		
-//		try {
-//			if (e.getId() == 0) { // insertion
-//				e.setMotDePasse(HashTools.hashSHA512(e.getMotDePasse()));
-//			} else { // modif
-//				
-//				EtudiantDto userInDb = getById(e.getId());
-//				if (!userInDb.getMotDePasse().contentEquals(e.getMotDePasse())) {
-//					e.setMotDePasse(HashTools.hashSHA512(e.getMotDePasse()));
-//				}
-//			}
-//
-//		} catch (Exception er) {
-//			er.printStackTrace();
-//		}
-//		
-//		//e.setPromotions();
-//	    List<Long> listeIdProm = eDto.getPromotionsId();
-//	    List<Promotion> listeProm = new ArrayList<Promotion>();
-//	    Promotion p;
-//	    PromotionDto pDto;
-//
-//	    for (Long long1 : listeIdProm) {
-//	    	pDto=promotionService.findById(long1.longValue());
-//	    	if(pDto!=null) {
-//	    		p=DtoTools.convert(pDto, Promotion.class);
-//				listeProm.add(p);
-//	    	}else {
-//	    		// ici on peut indiquer que la promotion n'a pas été trouvée en BDD
-//	    	}
-//	    
-//		}
-//	    e.setPromotions(listeProm);
-//		e = etudiantRepository.saveAndFlush(e);
-//		return DtoTools.convert(e, EtudiantDto.class);
-//		
-//	}
 
 	@Override
 	public EtudiantDto saveOrUpdate(EtudiantDto uDto) throws Exception {
-		
+		Etudiant u = DtoTools.convert(uDto, Etudiant.class);
+		try {
+			UtilisateurDto uInDb = this.findByEmail(uDto.getEmail());
+			if (uInDb != null) {
+				throw new InvalidDataException("Email déjà pris");
+			}
+		} catch (NoDataException e) {
 
-		if(uDto.getId()==0) { // insertion
+		}
+		if (uDto.getId() == 0) { // insertion
 			uDto.setMotDePasse(HashTools.hashSHA512(uDto.getMotDePasse()));
-		}else {
+		} else {
 			Optional<Etudiant> etudiantInDb = etudiantRepository.findById(uDto.getId());
-			if(etudiantInDb.isPresent()) {
-				//vérif que les mots de passe sont les meme sinon on le modifie
-				if(!etudiantInDb.get().getMotDePasse().equals(HashTools.hashSHA512(uDto.getMotDePasse()))) {
-					uDto.setMotDePasse(HashTools.hashSHA512(uDto.getMotDePasse()));
+			if (etudiantInDb.isPresent()) {
+				// vérif que les mots de passe sont les meme sinon on le modifie
+				if (u.getMotDePasse().length() > 0 && !etudiantInDb.get().getMotDePasse()
+						.contentEquals(HashTools.hashSHA512(uDto.getMotDePasse()))) {
+
+					u.setMotDePasse(HashTools.hashSHA512(uDto.getMotDePasse()));
+				}
+				if (u.getMotDePasse().length() == 0) {
+					u.setMotDePasse(etudiantInDb.get().getMotDePasse());
 				}
 			}
 		}
-		// TODO UPDATE UTILISATEUR EN ETUDIANT
-		Etudiant u = DtoTools.convert(uDto, Etudiant.class);
-		if(uDto.getPromotionsId()!=null) {
+
+//		Etudiant u = DtoTools.convert(uDto, Etudiant.class);
+		if (uDto.getPromotionsId() != null) {
 			for (long id : uDto.getPromotionsId()) {
 				Promotion promo = promotionRepository.findById(id).get();
 				u.getPromotions().add(promo);
 				promo.getEtudiants().add(u);
-                u.getPromotions().remove(null);
+				u.getPromotions().remove(null);
 			}
-            
+
 		}
 		u = etudiantRepository.saveAndFlush(u);
 		return DtoTools.convert(u, EtudiantDto.class);
 	}
 
-	
 	@Override
 	public List<EtudiantDto> getAll() {
-		
+
 		List<Etudiant> ListU = etudiantRepository.findAll();
 		List<EtudiantDto> result = new ArrayList<EtudiantDto>();
-		
+
 		for (Etudiant utilisateur : ListU) {
 			result.add(DtoTools.convert(utilisateur, EtudiantDto.class));
 		}
@@ -127,36 +99,39 @@ public class EtudiantServiceImpl implements EtudiantService{
 	}
 
 	@Override
-	public void delete(long id) {
+	public void delete(long id) throws NoDataException {
 		// suppression des eval et des positionnements de l'etudiant
 		Optional<Etudiant> e = etudiantRepository.findById(id);
-		if(e.isPresent()) {
+		if (e.isPresent()) {
 //			evaluationRepository.deleteByUserId(e.get().getId());
 			evaluationService.deleteByUserId(e.get().getId());
 			positionnementService.deleteByEtudiantId(id);
 			etudiantRepository.deleteById(id);
+		}else {
+			throw new NoDataException("Student not found");
 		}
 	}
 
 	@Override
 	public EtudiantDto findByEmail(String email) throws Exception {
 		Etudiant u = etudiantRepository.findByEmail(email);
-		if(u!=null)
+		if (u != null)
 			return DtoTools.convert(u, EtudiantDto.class);
 		else
 			throw new Exception("User not found !");
 	}
 
 	@Override
-	public EtudiantDto getById(long id) {
+	public EtudiantDto getById(long id) throws NoDataException {
+		if (id <= 0) {
+			throw new IllegalArgumentException("Id must be greater than 0");
+		}
 		Optional<Etudiant> u = etudiantRepository.findById(id);
 		if (u.isPresent())
 			return DtoTools.convert(u.get(), EtudiantDto.class);
 
-		return null;
+		throw new NoDataException("No student found");
 	}
-
-
 
 	@Override
 	public List<EtudiantDto> getAll(int page, int max, String search) {
@@ -181,12 +156,22 @@ public class EtudiantServiceImpl implements EtudiantService{
 		return d;
 	}
 
-
 	@Override
 	public List<EtudiantDto> getEtudiantAyantPasseEpreuve(long epreuveId) {
 		List<Etudiant> users = etudiantRepository.getEtudiantAyantPasseEpreuve(epreuveId);
 
-		// on transforme le résultat en liste de DTO
+		List<EtudiantDto> result = new ArrayList<EtudiantDto>();
+		for (Etudiant u : users) {
+			result.add(DtoTools.convert(u, EtudiantDto.class));
+		}
+		return result;
+	}
+
+	@Override
+	public List<EtudiantDto> getEtudiantByInterventionId(long intervId) {
+		List<Etudiant> users = etudiantRepository.getEtudiantsByInterventionId(intervId);
+
+	
 		List<EtudiantDto> result = new ArrayList<EtudiantDto>();
 		for (Etudiant u : users) {
 			result.add(DtoTools.convert(u, EtudiantDto.class));

@@ -17,6 +17,7 @@ import fr.dawan.evalnico.dto.CountDto;
 import fr.dawan.evalnico.dto.PromotionDto;
 import fr.dawan.evalnico.entities.BlocCompetences;
 import fr.dawan.evalnico.entities.Promotion;
+import fr.dawan.evalnico.exceptions.NoDataException;
 import fr.dawan.evalnico.repositories.BlocCompetencesRepository;
 import fr.dawan.evalnico.repositories.CompetenceRepository;
 import fr.dawan.evalnico.repositories.EpreuveRepository;
@@ -65,7 +66,7 @@ public class BlocCompetenceServiceImpl  implements BlocCompetenceService{
 	}
 
 	@Override
-	public BlocCompetencesDto findById(long id) {
+	public BlocCompetencesDto findById(long id) throws NoDataException {
 		Optional<BlocCompetences> b = blocCompetenceRepository.findById(id);
 		if(b.isPresent()) {
 			return DtoTools.convert(b.get(), BlocCompetencesDto.class);
@@ -74,7 +75,7 @@ public class BlocCompetenceServiceImpl  implements BlocCompetenceService{
 	}
 
 	@Override
-	public List<BlocCompetencesDto> findAllByTitreProId(long id) {
+	public List<BlocCompetencesDto> findAllByTitreProId(long id) throws NoDataException {
 		List<BlocCompetences> listeB = blocCompetenceRepository.findAllByTitreProId(id);
 		List<BlocCompetencesDto> result = new ArrayList<BlocCompetencesDto>();
 
@@ -97,7 +98,7 @@ public class BlocCompetenceServiceImpl  implements BlocCompetenceService{
 
 
 	@Override
-	public void deleteByTitreProId(long id) {
+	public void deleteByTitreProId(long id) throws Exception{
 		
 		List<BlocCompetences> result = blocCompetenceRepository.findAllByTitreProId(id);
 		for (BlocCompetences blocCompetences : result) {

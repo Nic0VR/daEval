@@ -39,12 +39,9 @@ public class EvaluationController {
 	public ResponseEntity<EvaluationDto> save(@RequestBody EvaluationDto promoDto){
 
 		EvaluationDto result = null;
-		try {
+		
 			result = evaluationService.saveOrUpdate(promoDto);
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		
 		if(result != null) {
 			return ResponseEntity.status(HttpStatus.CREATED).body(result);
 

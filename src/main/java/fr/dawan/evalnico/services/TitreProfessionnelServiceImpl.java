@@ -33,6 +33,7 @@ import fr.dawan.evalnico.dto.UtilisateurDto;
 import fr.dawan.evalnico.entities.Formation;
 import fr.dawan.evalnico.entities.TitreProfessionnel;
 import fr.dawan.evalnico.entities.Utilisateur;
+import fr.dawan.evalnico.exceptions.NoDataException;
 import fr.dawan.evalnico.repositories.TitreProfessionnelRepository;
 import fr.dawan.evalnico.tools.DtoTools;
 import fr.dawan.evalnico.tools.PdfTools;
@@ -75,7 +76,7 @@ public class TitreProfessionnelServiceImpl implements TitreProfessionnelService 
 	}
 
 	@Override
-	public void delete(long id) {
+	public void delete(long id) throws Exception {
 		// suppression des blocs de compétences qui font référence a ce titre :
 		blocCompetenceService.deleteByTitreProId(id);
 		// suppression des promos qui font reference a ce titre

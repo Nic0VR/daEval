@@ -4,11 +4,12 @@ import java.util.List;
 
 import fr.dawan.evalnico.dto.CountDto;
 import fr.dawan.evalnico.dto.TitreProfessionnelDto;
+import fr.dawan.evalnico.exceptions.NoDataException;
 
 public interface TitreProfessionnelService {
 
 	TitreProfessionnelDto saveOrUpdate(TitreProfessionnelDto tDto) throws Exception;
-	void delete(long id);
+	void delete(long id) throws Exception;
 	List<TitreProfessionnelDto> findByTitre(String titre);
 	List<TitreProfessionnelDto> findAll();
 	TitreProfessionnelDto findById(long id);
