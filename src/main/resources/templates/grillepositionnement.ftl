@@ -39,8 +39,8 @@
 				<td>${mge.intervention.dateDebut}</td>
 				<td>${mge.nomCompletFormateur}</td>
 				<td>${mge.formation.objectifsPedagogiques}</td>
-				<td>${mge.positionnement.niveauDebutId}</td>
-				<td>${mge.positionnement.niveauFinId}</td>
+				<td style="background-color:${mge.niveauDebut.codeCouleurHexa}">${mge.niveauDebut.description}</td>
+				<td style="background-color:${mge.niveauFin.codeCouleurHexa}">${mge.niveauFin.description}</td>
 				</tr>
 			</#list>
 			</tbody>

@@ -40,16 +40,16 @@ public class UtilisateurServiceImpl implements UtilisateurService {
 	public UtilisateurDto saveOrUpdate(UtilisateurDto uDto) throws Exception  {
 		Utilisateur u = DtoTools.convert(uDto, Utilisateur.class);
 
-		try {
-			UtilisateurDto uInDb = this.findByEmail(uDto.getEmail());
-			if (uInDb != null) {
-				throw new InvalidDataException("Email déjà pris");
-			}
-		} catch (NoDataException e) {
-
-		}
+		
 		if (u.getId() == 0) { // insertion
+			try {
+				UtilisateurDto uInDb = this.findByEmail(uDto.getEmail());
+				if (uInDb != null) {
+					throw new InvalidDataException("Email déjà pris");
+				}
+			} catch (NoDataException e) {
 
+			}
 			u.setMotDePasse(HashTools.hashSHA512(u.getMotDePasse()));
 		} else { // modif
 

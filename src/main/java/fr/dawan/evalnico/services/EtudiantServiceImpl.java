@@ -47,15 +47,16 @@ public class EtudiantServiceImpl implements EtudiantService {
 	@Override
 	public EtudiantDto saveOrUpdate(EtudiantDto uDto) throws Exception {
 		Etudiant u = DtoTools.convert(uDto, Etudiant.class);
-		try {
-			UtilisateurDto uInDb = this.findByEmail(uDto.getEmail());
-			if (uInDb != null) {
-				throw new InvalidDataException("Email déjà pris");
-			}
-		} catch (NoDataException e) {
 
-		}
 		if (uDto.getId() == 0) { // insertion
+			try {
+				UtilisateurDto uInDb = this.findByEmail(uDto.getEmail());
+				if (uInDb != null) {
+					throw new InvalidDataException("Email déjà pris");
+				}
+			} catch (NoDataException e) {
+
+			}
 			uDto.setMotDePasse(HashTools.hashSHA512(uDto.getMotDePasse()));
 		} else {
 			Optional<Etudiant> etudiantInDb = etudiantRepository.findById(uDto.getId());

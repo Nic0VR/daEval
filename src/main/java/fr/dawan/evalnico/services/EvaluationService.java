@@ -35,7 +35,7 @@ public interface EvaluationService {
 	
 	List<EvaluationDto> getAllEvalByEtudiantIdAndBlocId(long etudiantId, long blocCompId);
 	
-	String GeneratePDFBulletin(long titreProId, long etudiantId, long promotionId) throws Exception;
+//	String GeneratePDFBulletin(long titreProId, long etudiantId, long promotionId) throws Exception;
 
 	String generateBulletinPdfByStudentAndPromo(long etudiantId, long promotionId) throws Exception;
 

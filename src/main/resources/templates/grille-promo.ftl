@@ -1,6 +1,12 @@
 <!DOCTYPE html>
 <html>
 	<head>
+	<style>
+	@page { 
+
+    size: landscape;
+	}
+	</style>
 		<meta charset="UTF-8" />
 		<link rel="stylesheet" href="${backEndUrl}/css/main.css" />	
 	</head>
@@ -41,8 +47,8 @@
 										<td colspan="2">${pos.etudiant.prenom} ${pos.etudiant.nom}</td>
 									</tr>
 									<tr>
-										<td>${pos.niveauDebut.valeur}</td>
-										<td>${pos.niveauFin.valeur}</td>
+										<td style="background-color:${pos.niveauDebut.codeCouleurHexa}">${pos.niveauDebut.description}</td>
+										<td style="background-color:${pos.niveauFin.codeCouleurHexa}">${pos.niveauFin.description}</td>
 									</tr>
 								</table>	
 							</td>

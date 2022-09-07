@@ -182,51 +182,7 @@ public class EvaluationServiceImpl implements EvaluationService {
 		return result;
 	}
 
-	@Override
-	public String GeneratePDFBulletin(long titreProId, long etudiantId, long promotionId) throws Exception {
-		TitreProfessionnelDto t = titreProfessionnelService.findById(titreProId);
-		EtudiantDto e = etudiantService.getById(etudiantId);
-		PromotionDto p = promotionService.findById(promotionId);
-		List<BlocCompetencesDto> blocs = blocCompetencesService.findAllByTitreProId(t.getId());
-		List<CompetenceDto> competences = competenceService.findAllByTitreProfessionnelId(titreProId);
-		
-		
-		Map<String,Object> model = new HashMap<String,Object>();
-		model.put("titrePro", t);
-		model.put("etudiant",e);
-		model.put("promo", p);
-		model.put("competences", competences);
-		model.put("blocs", blocs);
-		// besoin de passer les moyennes générale de l'etudiant et de la promo pour chaque bloc
-		Map<String,CountDto> moyennesEtudiant = new HashMap<String,CountDto>();
-		Map<String,CountDto> moyennesPromotion = new HashMap<String,CountDto>();
 
-		for (BlocCompetencesDto blocCompetencesDto : blocs) {
-			moyennesEtudiant.put(String.valueOf(blocCompetencesDto.getId()) ,  moyenneEtudiantInBlocComp(etudiantId,blocCompetencesDto.getId()));
-			moyennesPromotion.put(String.valueOf(blocCompetencesDto.getId()), moyennePromotionBlocCompetence(p.getId(),blocCompetencesDto.getId()));
-		}
-		model.put("moyennesEtudiant", moyennesEtudiant);
-		model.put("moyennesPromotion", moyennesPromotion);
-		// on fait passer la moyenne générale de l'etudiant et de la promo
-		Map<String,CountDto> moyennesGenerale = new HashMap<String,CountDto>();
-		moyennesGenerale.put("etudiant",moyenneGeneraleEtudiant(e.getId(),p.getId()) );
-		moyennesGenerale.put("promotion", moyenneGeneralePromotion(p.getId()));
-		
-		model.put("moyennesGenerale", moyennesGenerale);
-		//on définit ici le chemin où il va chercher les fichiers de templates
-		freemarkerConfig.setClassForTemplateLoading(this.getClass(), "/templates");
-		
-		//charger le template titrepro.ftl 
-		Template template = freemarkerConfig.getTemplate("titrepro.ftl");
-		
-		//on lui demande d'appliquer le template pour l'objet model
-		String result = FreeMarkerTemplateUtils.processTemplateIntoString(template, model);
-					
-		String outputPdf = storageFolder + "/titrepro-" + t.getId() + ".pdf";
-		PdfTools.generatePdfFromHtml(outputPdf, result);
-		return result;
-	}
-	
 
 
 	@Override  

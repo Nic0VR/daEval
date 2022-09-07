@@ -13,8 +13,8 @@ public interface TitreProfessionnelService {
 	List<TitreProfessionnelDto> findByTitre(String titre);
 	List<TitreProfessionnelDto> findAll();
 	TitreProfessionnelDto findById(long id);
-	String generatePdf(long id) throws Exception;
 	int importFromDG2() throws Exception;
 	List<TitreProfessionnelDto> findByPage(int page,int max, String search);
 	CountDto count(String search);
+	String generatePdf(long id) throws Exception;
 }

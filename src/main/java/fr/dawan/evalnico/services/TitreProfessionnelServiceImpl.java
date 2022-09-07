@@ -21,7 +21,9 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import fr.dawan.evalnico.dto.BlocCompEnrichiDto;
 import fr.dawan.evalnico.dto.BlocCompetencesDto;
+import fr.dawan.evalnico.dto.CompetenceDto;
 import fr.dawan.evalnico.dto.CountDto;
 import fr.dawan.evalnico.dto.DG2TitreProDto;
 import fr.dawan.evalnico.dto.DG2TrainingDto;
@@ -165,13 +167,23 @@ public class TitreProfessionnelServiceImpl implements TitreProfessionnelService 
 		}
 		return nbt;
 	}
-
+//
 	@Override
 	public String generatePdf(long id) throws Exception {
 
 		TitreProfessionnelDto t = findById(id);
+		
 		List<BlocCompetencesDto> blocs = blocCompetenceService.findAllByTitreProId(id);
-
+		List<BlocCompEnrichiDto> data = new ArrayList<BlocCompEnrichiDto>();
+		//pour chaque bloc on récup ses competences
+		for (BlocCompetencesDto blocCompetencesDto : blocs) {
+			BlocCompEnrichiDto bce = new BlocCompEnrichiDto();
+			bce.setBloc(blocCompetencesDto);
+			List<CompetenceDto> comp = competenceService.findAllByBlocCompetenceId(blocCompetencesDto.getId());
+			bce.setComps(comp);
+			data.add(bce);
+		}
+		
 		// on définit ici le chemin où il va chercher les fichiers de templates
 		freemarkerConfig.setClassForTemplateLoading(this.getClass(), "/templates");
 
@@ -180,9 +192,8 @@ public class TitreProfessionnelServiceImpl implements TitreProfessionnelService 
 
 		// Une map pour envoyer plusieurs objets au freemarker template
 		Map<String, Object> model = new HashMap<String, Object>();
-		model.put("t", t);
-		model.put("blocs", blocs);
-
+		model.put("blocCompsEnrichi", data);
+		model.put("titrePro",t);
 		// on lui demande d'appliquer le template pour l'objet t (titreProfessionnel)
 		String htmlContent = FreeMarkerTemplateUtils.processTemplateIntoString(template, model);
 

@@ -18,9 +18,11 @@ import fr.dawan.evalnico.dto.EtudiantDto;
 import fr.dawan.evalnico.dto.FormationDto;
 import fr.dawan.evalnico.dto.InterventionDto;
 import fr.dawan.evalnico.dto.ModelGrilleEtudiant;
+import fr.dawan.evalnico.dto.NiveauDto;
 import fr.dawan.evalnico.dto.PositionnementDto;
 import fr.dawan.evalnico.dto.UtilisateurDto;
 import fr.dawan.evalnico.entities.Intervention;
+import fr.dawan.evalnico.entities.Niveau;
 import fr.dawan.evalnico.entities.Positionnement;
 import fr.dawan.evalnico.entities.Promotion;
 import fr.dawan.evalnico.exceptions.IllegalCreateException;
@@ -54,6 +56,8 @@ public class PositionnementServiceImpl implements PositionnementService {
 	private FormationService formationService;
 	@Autowired
 	private UtilisateurService utilisateurService;
+	@Autowired
+	private NiveauService niveauService;
 	
 	@Override
 	public List<PositionnementDto> getAll() {
@@ -82,7 +86,7 @@ public class PositionnementServiceImpl implements PositionnementService {
 			Positionnement p = positionnementRepository.findByEtudiantIdAndInterventionId(uDto.getEtudiantId(),
 					uDto.getInterventionId());
 			if (p != null)
-				throw new IllegalCreateException("An other positionnement exist for this student/intervention, update the first one !");
+				throw new IllegalCreateException("An other positionnement exist for this student/intervention, delete the first one !");
 		}
 		u = positionnementRepository.saveAndFlush(u);
 		return DtoTools.convert(u, PositionnementDto.class);
@@ -172,6 +176,8 @@ public class PositionnementServiceImpl implements PositionnementService {
 			mge.setPositionnement(positionnementDto);
 			mge.setNomCompletFormateur(nomFormateur);
 			
+			mge.setNiveauDebut(niveauService.findById(positionnementDto.getNiveauDebutId()));
+			mge.setNiveauFin(niveauService.findById(positionnementDto.getNiveauFinId()));
 			data.add(mge);
 		}
 		

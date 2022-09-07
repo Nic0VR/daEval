@@ -32,32 +32,6 @@ public class PromotionServiceImpl implements PromotionService {
 
 	
 
-//	@Override
-//	public PromotionDto saveOrUpdate(PromotionDto pDto) throws Exception {
-//
-//		Promotion p = DtoTools.convert(pDto, Promotion.class);
-//		List<Long> listEtudiantsId = pDto.getEtudiantsId();
-//
-//		if(!listEtudiantsId.isEmpty()) {
-//			//Etudiant etu;
-//			List<Etudiant> res = new ArrayList<Etudiant>();
-//			for (Long id : listEtudiantsId) {
-//				Optional<Etudiant> e = etudiantRepository.findById(id.longValue());
-//				if(e.isPresent()) {
-//					e.get().getPromotions().add(p);
-//					if(!res.contains(e.get())) {
-//						res.add(e.get());
-//					}
-//
-//				}
-//
-//			}
-//			p.setEtudiants(res);
-//		}
-//
-//		p = promotionRepository.saveAndFlush(p);
-//		return DtoTools.convert(p, PromotionDto.class);
-//	}
 	
 	@Override
 	public PromotionDto saveOrUpdate(PromotionDto pDto) throws Exception {
@@ -95,28 +69,6 @@ public class PromotionServiceImpl implements PromotionService {
 		return DtoTools.convert(promo, PromotionDto.class);
 	}
 	
-//	@Override
-//	public void delete(long id) {
-//		Optional<Promotion> p = promotionRepository.findById(id);
-//		List<Long> listEtudiantsId = p.get().getEtudiantsId();
-//
-//		if(!listEtudiantsId.isEmpty()) {
-//			//Etudiant etu;
-//			List<Etudiant> res = new ArrayList<Etudiant>();
-//			for (Long etudiantId : listEtudiantsId) {
-//				Optional<Etudiant> e = etudiantRepository.findById(etudiantId.longValue());
-//
-//				if(e.isPresent()) {
-//					p.get().getEtudiants().remove(e.get());
-//				}
-//
-//			}
-//			p.get().setEtudiants(res);
-//		}
-//		
-//		promotionRepository.delete(p.get());
-//
-//	}
 
 	@Override
 	public void delete(long id) {
