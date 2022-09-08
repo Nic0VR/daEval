@@ -31,7 +31,7 @@ public class DawanEvalNicoApplication {
 			// AJOUT D'UN FILTRE
 			@Override
 			public void addInterceptors(InterceptorRegistry registry) {
-				 //registry.addInterceptor(tokenInterceptor);
+				 registry.addInterceptor(tokenInterceptor);
 			}
 
 			// CROS ORIGIN

@@ -10,6 +10,7 @@ import org.springframework.web.servlet.HandlerInterceptor;
 import fr.dawan.evalnico.exceptions.TokenException;
 import fr.dawan.evalnico.tools.JwtTokenUtil;
 import fr.dawan.evalnico.tools.TokenSaver;
+import io.jsonwebtoken.Claims;
 
 
 
@@ -49,11 +50,13 @@ public class TokenInterceptor implements HandlerInterceptor {
 				
 				
 				//Autre : ....
-				//Claims claims = jwtTokenUtil.getAllClaimsFromToken(token);
+				Claims claims = jwtTokenUtil.getAllClaimsFromToken(token);
+
+				if(!claims.get("user_role").toString().contentEquals("ADMINISTRATEUR")) {
+					throw new TokenException("Error : Unauthorized :");
+				}
 			}
 		}
-		
-		
 		
 		
 		return true;

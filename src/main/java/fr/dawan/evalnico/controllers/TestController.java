@@ -18,10 +18,10 @@ public class TestController {
 	public ResponseEntity<String> insertionJeuDeTest(){
 		
 		EtudiantDto etu1 = new EtudiantDto();
-		etu1.setEmail("etudiant1@dawan.fr");
+		etu1.setEmail("nicovr@dawan.fr");
 		etu1.setMotDePasse("password");
-		etu1.setNom("VRAD");
-		etu1.setPrenom("Nico");
+		etu1.setNom("Vallery-Radot");
+		etu1.setPrenom("Nicolas");
 		
 		try {
 			etudiantService.saveOrUpdate(etu1);
@@ -32,8 +32,8 @@ public class TestController {
 		EtudiantDto etu2 = new EtudiantDto();
 		etu2.setEmail("etudiant2@dawan.fr");
 		etu2.setMotDePasse("password");
-		etu2.setNom("VRAD2");
-		etu2.setPrenom("Nico2");
+		etu2.setNom("Jean");
+		etu2.setPrenom("Jean");
 		
 		try {
 			etudiantService.saveOrUpdate(etu2);
